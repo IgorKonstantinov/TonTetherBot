@@ -186,8 +186,8 @@ class Tapper:
                 auth_usdt_balance = auth_data['data']['usdt_balance']
                 auth_tap_balance = auth_data['data']['tap_balance']
 
-                logger.success(f"{self.session_name} | Auth username: <c>{auth_username},</c> | "
-                               f"Balance: <c>{auth_usdt_balance:.2f} usdt</c>, <c>{auth_tap_balance:.2f} tap</c>, Clicks: <c>{auth_clicks}</c>")
+                logger.success(f"{self.session_name} | Auth username: <c>{auth_username}</c> | "
+                               f"Balance: <c>{auth_usdt_balance:.2f} usdt</c>, <c>{auth_tap_balance:.2f} tap</c> | Clicks: <c>{auth_clicks}</c>")
 
                 while auth_clicks > settings.MIN_AVAILABLE_CLICKS:
                     taps = random.randint(*settings.RANDOM_TAPS_COUNT)
@@ -203,6 +203,7 @@ class Tapper:
                 else:
                     taps = auth_clicks
                     clicks_data = await self.clicks_collect(http_client=http_client, clicks=taps)
+                    auth_clicks = clicks_data['data']['last_remaining_clicks']
                     logger.success(
                         f"{self.session_name} | bot action: <red>[tap/{taps}]</red> clicks: <c>{auth_clicks}/1000</c>")
 
