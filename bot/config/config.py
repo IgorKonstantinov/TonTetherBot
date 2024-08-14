@@ -11,7 +11,7 @@ class Settings(BaseSettings):
     RANDOM_SLEEP: list[int] = [1, 5]
 
     MIN_AVAILABLE_CLICKS: int = 100
-    SLEEP_BY_MIN_CLICKS: list[int] = [300, 600]
+    SLEEP_BY_MIN_CLICKS: list[int] = [600, 900]
 
     AUTO_UPGRADE: bool = True
     MAX_LEVEL: int = 20
