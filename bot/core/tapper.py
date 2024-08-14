@@ -151,7 +151,7 @@ class Tapper:
 
     async def run(self, proxy: str | None) -> None:
         access_token_created_time = 0
-        auth_remainingClicks = 0
+        auth_clicks = 0
 
         proxy_conn = ProxyConnector().from_url(proxy) if proxy else None
         http_client = CloudflareScraper(headers=headers, connector=proxy_conn)
@@ -195,7 +195,7 @@ class Tapper:
 
                     if clicks_data:
                         auth_clicks = clicks_data['data']['last_remaining_clicks']
-                        logger.success(f"{self.session_name} | bot action: <red>[tap/{taps}]</red> cliks: <c>{clicks_data}</c>")
+                        logger.success(f"{self.session_name} | bot action: <red>[tap/{taps}]</red> clicks: <c>{auth_clicks}/1000</c>")
                         logger.info(f"sleep between click: {sleep_between_tap}s")
                         await asyncio.sleep(delay=sleep_between_tap)
                     else:
@@ -204,9 +204,9 @@ class Tapper:
                     taps = auth_clicks
                     clicks_data = await self.clicks_collect(http_client=http_client, clicks=taps)
                     logger.success(
-                        f"{self.session_name} | bot action: <red>[tap/{taps}]</red> cliks: <c>{clicks_data}</c>")
+                        f"{self.session_name} | bot action: <red>[tap/{taps}]</red> clicks: <c>{auth_clicks}/1000</c>")
 
-                logger.info(f"{self.session_name} | Minimum energy reached: {auth_remainingClicks}")
+                logger.info(f"{self.session_name} | Minimum energy reached: {auth_clicks}")
                 logger.info(f"{self.session_name} | Sleep {sleep_by_min_clicks:,}s")
                 await asyncio.sleep(delay=sleep_by_min_clicks)
                 #access_token_created_time = 0
