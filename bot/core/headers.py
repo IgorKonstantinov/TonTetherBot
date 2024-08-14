@@ -1,0 +1,15 @@
+headers = {
+  'accept': 'application/json, text/plain, */*',
+  'accept-language': 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7',
+  'content-type': 'application/json; charset=UTF-8',
+  'origin': 'https://tontether03082024.pages.dev',
+  'priority': 'u=1, i',
+  'referer': 'https://tontether03082024.pages.dev/',
+  'sec-ch-ua': '"Not)A;Brand";v="99", "Android WebView";v="127", "Chromium";v="127"',
+  'sec-ch-ua-mobile': '?1',
+  'sec-ch-ua-platform': '"Android"',
+  'sec-fetch-dest': 'empty',
+  'sec-fetch-mode': 'cors',
+  'sec-fetch-site': 'cross-site',
+  'user-agent': 'Mozilla/5.0 (Linux; Android 13; K) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/127.0.6533.103 Mobile Safari/537.36',
+}
