@@ -137,7 +137,6 @@ class Tapper:
         try:
             clicks_collect_url = "https://tontether.click/user/click"
             json_data = {'click_count': clicks, 'at': int(time()*1000)}
-            print(json_data)
 
             response = await http_client.post(url=clicks_collect_url, json=json_data)
             response.raise_for_status()
@@ -188,7 +187,7 @@ class Tapper:
                 auth_tap_balance = auth_data['data']['tap_balance']
 
                 logger.success(f"{self.session_name} | Auth username: <c>{auth_username},</c> | "
-                               f"Balance: <c>{auth_usdt_balance} usdt</c>, <c>{auth_tap_balance} tap</c>, Clicks: <c>{auth_clicks}</c>")
+                               f"Balance: <c>{auth_usdt_balance:.2f} usdt</c>, <c>{auth_tap_balance:.2f} tap</c>, Clicks: <c>{auth_clicks}</c>")
 
                 while auth_clicks > settings.MIN_AVAILABLE_CLICKS:
                     taps = random.randint(*settings.RANDOM_TAPS_COUNT)
