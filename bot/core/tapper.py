@@ -165,8 +165,8 @@ class Tapper:
             try:
                 #Variables
                 random_sleep = random.randint(*settings.RANDOM_SLEEP)
-                sleep_between_tap = random.randint(*settings.SLEEP_BETWEEN_TAP)
                 sleep_by_min_clicks = random.randint(*settings.SLEEP_BY_MIN_CLICKS)
+                sleep_between_tap = random.randint(*settings.SLEEP_BETWEEN_TAP)
 
                 if not tg_web_data:
                     continue
@@ -198,6 +198,8 @@ class Tapper:
 
                 while auth_clicks > settings.MIN_AVAILABLE_CLICKS:
                     taps = random.randint(*settings.RANDOM_TAPS_COUNT)
+                    sleep_between_tap = random.randint(*settings.SLEEP_BETWEEN_TAP)
+
                     clicks_data = await self.clicks_collect(http_client=http_client, clicks=taps)
 
                     if clicks_data:
@@ -216,8 +218,6 @@ class Tapper:
                 logger.info(f"{self.session_name} | Minimum energy reached: {auth_clicks}")
                 logger.info(f"{self.session_name} | Sleep {sleep_by_min_clicks:,}s")
                 await asyncio.sleep(delay=sleep_by_min_clicks)
-                #access_token_created_time = 0
-                #await http_client.close()
 
             except InvalidSession as error:
                 raise error
