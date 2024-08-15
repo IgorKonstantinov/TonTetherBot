@@ -188,12 +188,12 @@ class Tapper:
                 auth_tap_balance = auth_data['data']['tap_balance']
 
                 logger.success(f"{self.session_name} | Auth username: <c>{auth_username}</c> | "
-                               f"Balance: <c>{auth_usdt_balance:.2f} usdt</c>, <c>{auth_tap_balance:.2f} tap</c> | Clicks: <c>{auth_clicks} fool :(( </c>")
+                               f"Balance: <g>{auth_usdt_balance:.2f}</g> usdt, <g>{auth_tap_balance:.2f}</g> xsdt")
 
                 taps = random.randint(1,5)
                 clicks_data = await self.clicks_collect(http_client=http_client, clicks=taps)
                 auth_clicks = clicks_data['data']['last_remaining_clicks']
-                logger.success(f"{self.session_name} | bot action: <red>[tap/{taps}]</red> clicks: <c>{auth_clicks}/1000</c>")
+                logger.success(f"{self.session_name} | bot action: <red>[tap/{taps}]</red> clicks: <c>{auth_clicks}/1000</c> | sleep: {sleep_between_tap}s")
                 await asyncio.sleep(delay=sleep_between_tap)
 
                 while auth_clicks > settings.MIN_AVAILABLE_CLICKS:
@@ -202,8 +202,7 @@ class Tapper:
 
                     if clicks_data:
                         auth_clicks = clicks_data['data']['last_remaining_clicks']
-                        logger.success(f"{self.session_name} | bot action: <red>[tap/{taps}]</red> clicks: <c>{auth_clicks}/1000</c>")
-                        logger.info(f"sleep between click: {sleep_between_tap}s")
+                        logger.success(f"{self.session_name} | bot action: <red>[tap/{taps}]</red> clicks: <c>{auth_clicks}/1000</c> | sleep: {sleep_between_tap}s")
                         await asyncio.sleep(delay=sleep_between_tap)
                     else:
                         logger.error(f"{self.session_name} | Click error :( ")
