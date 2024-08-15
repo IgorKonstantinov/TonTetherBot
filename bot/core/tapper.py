@@ -181,13 +181,20 @@ class Tapper:
                     await asyncio.sleep(delay=random_sleep)
 
                 auth_data = await self.auth(http_client=http_client)
+
                 auth_username = auth_data['data']['username']
                 auth_clicks = auth_data['data']['last_remaining_clicks']
                 auth_usdt_balance = auth_data['data']['usdt_balance']
                 auth_tap_balance = auth_data['data']['tap_balance']
 
                 logger.success(f"{self.session_name} | Auth username: <c>{auth_username}</c> | "
-                               f"Balance: <c>{auth_usdt_balance:.2f} usdt</c>, <c>{auth_tap_balance:.2f} tap</c> | Clicks: <c>{auth_clicks}</c>")
+                               f"Balance: <c>{auth_usdt_balance:.2f} usdt</c>, <c>{auth_tap_balance:.2f} tap</c> | Clicks: <c>{auth_clicks} fool :(( </c>")
+
+                taps = random.randint(1,5)
+                clicks_data = await self.clicks_collect(http_client=http_client, clicks=taps)
+                auth_clicks = clicks_data['data']['last_remaining_clicks']
+                logger.success(f"{self.session_name} | bot action: <red>[tap/{taps}]</red> clicks: <c>{auth_clicks}/1000</c>")
+                await asyncio.sleep(delay=sleep_between_tap)
 
                 while auth_clicks > settings.MIN_AVAILABLE_CLICKS:
                     taps = random.randint(*settings.RANDOM_TAPS_COUNT)
