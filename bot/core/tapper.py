@@ -1,6 +1,4 @@
 import asyncio
-import hmac
-import hashlib
 import random
 from urllib.parse import unquote
 from time import time
@@ -27,13 +25,6 @@ class Tapper:
         self.user_id = 0
         self.username = None
 
-    async def get_secret(self, userid):
-        key_hash = str("adwawdasfajfklasjglrejnoierjboivrevioreboidwa").encode('utf-8')
-        message = str(userid).encode('utf-8')
-        hmac_obj = hmac.new(key_hash, message, hashlib.sha256)
-        secret = str(hmac_obj.hexdigest())
-        return secret
-
     async def get_tg_web_data(self, proxy: str | None) -> str:
         if proxy:
             proxy = Proxy.from_str(proxy)
@@ -50,10 +41,7 @@ class Tapper:
         self.tg_client.proxy = proxy_dict
 
         try:
-            with_tg = True
-
             if not self.tg_client.is_connected:
-                with_tg = False
                 try:
                     await self.tg_client.connect()
                 except (Unauthorized, UserDeactivated, AuthKeyUnregistered):
@@ -61,30 +49,40 @@ class Tapper:
 
             while True:
                 try:
-                    peer = await self.tg_client.resolve_peer('TonTetherBot')
+                    peer = await self.tg_client.resolve_peer(settings.PEER_NAME)
                     break
                 except FloodWait as fl:
                     fls = fl.value
 
                     logger.warning(f"{self.session_name} | FloodWait {fl}")
+                    fls *= 2
                     logger.info(f"{self.session_name} | Sleep {fls}s")
+                    await asyncio.sleep(fls)
 
-                    await asyncio.sleep(fls + 3)
+            try:
+                web_view = await self.tg_client.invoke(RequestWebView(
+                    peer=peer,
+                    bot=peer,
+                    platform='android',
+                    from_bot_menu=False,
+                    url=settings.PEER_URL
+                ))
+            except Exception as e:
+                logger.error(f"{self.session_name} | Error invoking RequestWebView: {e}")
+                raise
 
-            web_view = await self.tg_client.invoke(RequestWebView(
-                peer=peer,
-                bot=peer,
-                platform='android',
-                from_bot_menu=False,
-                url='https://tontether03082024.pages.dev/'
-            ))
+            try:
+                auth_url = web_view.url
+                tg_web_data = unquote(
+                    string=unquote(
+                        string=auth_url.split('tgWebAppData=', maxsplit=1)[1].split('&tgWebAppVersion', maxsplit=1)[0]))
+            except Exception as e:
+                logger.error(f"{self.session_name} | Error parsing auth_url: {e}")
+                raise
 
-            auth_url = web_view.url
-
-            tg_web_data = unquote(string=auth_url.split('tgWebAppData=', maxsplit=1)[1].split('&tgWebAppVersion', maxsplit=1)[0])
             self.user_id = (await self.tg_client.get_me()).id
 
-            if with_tg is False:
+            if self.tg_client.is_connected:
                 await self.tg_client.disconnect()
 
             return tg_web_data

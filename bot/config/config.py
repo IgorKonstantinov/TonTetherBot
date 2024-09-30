@@ -6,6 +6,9 @@ class Settings(BaseSettings):
     API_ID: int
     API_HASH: str
 
+    PEER_NAME: str = 'TonTetherBot'
+    PEER_URL: str = 'https://tontether03082024.pages.dev/'
+
     RANDOM_TAPS_COUNT: list[int] = [50, 100]
     SLEEP_BETWEEN_TAP: list[int] = [5, 10]
     RANDOM_SLEEP: list[int] = [1, 5]
