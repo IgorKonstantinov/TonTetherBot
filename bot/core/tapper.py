@@ -21,6 +21,8 @@ from .headers import headers
 class Tapper:
     def __init__(self, tg_client: Client):
         self.session_name = tg_client.name
+        self.peer_name = 'TonTetherBot'
+        self.peer_url = 'https://tontether03082024.pages.dev/'
         self.tg_client = tg_client
         self.user_id = 0
         self.username = None
@@ -49,14 +51,14 @@ class Tapper:
 
             while True:
                 try:
-                    peer = await self.tg_client.resolve_peer(settings.PEER_NAME)
+                    peer = await self.tg_client.resolve_peer(self.peer_name)
                     break
                 except FloodWait as fl:
                     fls = fl.value
 
                     logger.warning(f"{self.session_name} | FloodWait {fl}")
                     fls *= 2
-                    logger.info(f"{self.session_name} | Sleep {fls}s")
+                    logger.info(f"{self.session_name} | FloodWait Sleep {fls}s")
                     await asyncio.sleep(fls)
 
             try:
@@ -65,7 +67,7 @@ class Tapper:
                     bot=peer,
                     platform='android',
                     from_bot_menu=False,
-                    url=settings.PEER_URL
+                    url=self.peer_url
                 ))
             except Exception as e:
                 logger.error(f"{self.session_name} | Error invoking RequestWebView: {e}")
@@ -149,7 +151,6 @@ class Tapper:
 
     async def run(self, proxy: str | None) -> None:
         access_token_created_time = 0
-        auth_clicks = 0
 
         proxy_conn = ProxyConnector().from_url(proxy) if proxy else None
         http_client = CloudflareScraper(headers=headers, connector=proxy_conn)
@@ -223,9 +224,8 @@ class Tapper:
             except Exception as error:
                 logger.error(f"{self.session_name} | Unknown error: {error}")
                 access_token_created_time = 0
-
-                await asyncio.sleep(delay=30)
                 await http_client.close()
+                await asyncio.sleep(delay=300)
 
 
 async def run_tapper(tg_client: Client, proxy: str | None):
