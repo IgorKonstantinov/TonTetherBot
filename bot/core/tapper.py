@@ -2,7 +2,6 @@ import asyncio
 import random
 from urllib.parse import unquote
 from time import time
-from datetime import datetime, timezone
 
 import aiohttp
 import json
